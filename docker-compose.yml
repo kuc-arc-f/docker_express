@@ -1,0 +1,44 @@
+version: '3'
+services:
+  web:
+    build:
+      context: ./docker/construct_web      # Dockerfile保存場所
+      dockerfile: Dockerfile-web    # Dockerfileファイル名
+    image: nn-web-2                 # docker image name
+    container_name: nn-web-2        # docker container name
+    ports:
+      - 80:80
+    depends_on: 
+      - app      
+
+  app:
+    build:
+      context: ./docker/construct_app      # Dockerfile保存場所
+      dockerfile: Dockerfile-app    # Dockerfileファイル名
+    image: nn-app-2                 # docker image name
+    container_name: nn-app-2        # docker container name
+    ports:                          # ポート接続
+      - 3000:3000
+    links: 
+      - mongo
+    depends_on: 
+      - mongo
+    volumes:                        # mount workdir
+      - ./myapp:/src
+    command: [sh, -c, npm install && npm start]
+
+  mongo:
+    image: mongo
+    container_name: "mongo"
+    command: 
+      - mongod
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo-data:/data/db
+
+  mongo-data:
+    image: busybox
+
+volumes: 
+  mongo-data:
