@@ -4,9 +4,11 @@
     <a class="btn btn-primary" href="/tasks/new"> add</a>
     <hr />
     <ul v-for="task in tasks" v-bind:key="task._id">
-        <li>{{ task.title }} / id: {{ task._id }}
+        <li>{{ task.title }}
             <p>{{ task.content }}</p>
-            <a v-bind:href="'/tasks/show/' + task._id">[show]</a><br />
+            ID: {{ task._id }}
+            &nbsp;&nbsp;
+            <a v-bind:href="'/tasks/show/' + task._id">[show]</a>
             <a v-bind:href="'/tasks/edit/' + task._id">[edit]</a><br />
         </li>
     </ul>    
