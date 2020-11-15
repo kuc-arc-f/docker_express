@@ -3,16 +3,15 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var mongo = require('mongodb');
-var monk = require('monk');
-//var db = monk('localhost:27017/app1db');
-//var db = monk('192.168.10.104:27017/app1db');
-var db = monk('mongo:27017/app1db');
-
+const flash = require('express-flash');
+var session = require('express-session');
 //
 var indexRouter = require('./routes/index');
+var loginRouter = require('./routes/login');
 var usersRouter = require('./routes/users');
 var tasksRouter = require('./routes/tasks');
+var reactTasksRouter = require('./routes/react_tasks');
+//
 var apiRouter = require('./routes/api');
 
 var app = express();
@@ -24,19 +23,41 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+//app.use(express.json());
+//app.use(express.urlencoded({ extended: false }));
+app.use(express.json({ limit: '5mb', extended: true }));
+app.use(express.urlencoded({ limit:'5mb' ,extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function(req,res,next){
-  req.db = db;
+//  req.db = db;
   next();
 });
-
+// CSRF
+//express-sessionモジュールを設定する
+app.use(session({
+  //暗号化に利用するキーを設定
+  secret: 'secret key',
+  //毎回セッションを作成しない
+  resave: false,
+  //未初期化状態のセッションを保存しない
+  saveUninitialized: false,
+  cookie: {
+    //生存期間( msec )
+    maxAge: 365 * 24 * 60 * 1000,
+    //httpsを使用しない
+    secure: false
+  }
+}));
+app.use(flash());
+//route
 app.use('/', indexRouter);
+app.use('/login', loginRouter );
 app.use('/users', usersRouter);
 app.use('/tasks', tasksRouter );
+app.use('/react_tasks', reactTasksRouter );
+//api
 app.use('/api', apiRouter );
 
 // catch 404 and forward to error handler

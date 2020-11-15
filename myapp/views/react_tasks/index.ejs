@@ -1,10 +1,9 @@
 <br />
 <div class="row">
     <div class="col-sm-6">
-        <a href="/tasks/add">[ Add ] </a>
+        <a href="/react_tasks/new">[ new ] </a>
     </div>
     <div class="col-sm-6">
-        <a href="/tasks/import_task">[ Import-task ] </a>
     </div>
 
 </div>
@@ -12,7 +11,7 @@
 <div id="app"></div>
 
 <!-- -->
-<script type="text/babel" src="/js/component/Tasks/IndexRow.js" ></script>
+<script type="text/babel" src="/js/component/ReactTasks/IndexRow.js" ></script>
 <script type="text/babel">
 var PAGE = <%= page %>;
 //
@@ -32,13 +31,12 @@ class List extends React.Component {
             var items = res.data.docs
 //            var item_count = data.page_item.item_count
 //            var paginate_disp = data.page_item.paginate_disp;
-
             var arr =[];
             this.setState({ 
 //                data: items ,item_count:item_count ,paginate_disp: paginate_disp
                 data: items ,item_count:0 ,paginate_disp: 0,
             })
-console.log( items );
+// console.log(res.data.page_item );
         })
     }    
     tabRow(){
@@ -66,7 +64,7 @@ console.log( items );
     render(){
         return (
             <div>
-                <h1>Tasks</h1>
+                <h1>ReactTasks</h1>
                 <table className="table table-hover">
                     <thead>
                     <tr>
@@ -80,7 +78,7 @@ console.log( items );
                 </table> 
                 <hr />
                 {this.dispPagenate()}
-                <br /><br />           
+                <br />           
             </div>
         )
     }

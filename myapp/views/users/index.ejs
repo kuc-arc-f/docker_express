@@ -1,18 +1,19 @@
+
 <br />
 <div class="row">
     <div class="col-sm-6">
-        <a href="/tasks/add">[ Add ] </a>
+        <a href="/sorted_tasks/new">[ new ] </a>
     </div>
     <div class="col-sm-6">
-        <a href="/tasks/import_task">[ Import-task ] </a>
+        <a href="/sorted_tasks/import_task">[ import_task ] </a>
     </div>
-
 </div>
+
 <hr />
 <div id="app"></div>
 
 <!-- -->
-<script type="text/babel" src="/js/component/Tasks/IndexRow.js" ></script>
+<script type="text/babel" src="/js/component/SortedTasks/IndexRow.js" ></script>
 <script type="text/babel">
 var PAGE = <%= page %>;
 //
@@ -27,18 +28,17 @@ class List extends React.Component {
         this.get_items(PAGE);
     }
     get_items(PAGE){
-        axios.get("/api/tasks_index?page=" +PAGE).then(res =>  {
+        axios.get("/api_sorted_tasks/tasks_index?page=" +PAGE).then(res =>  {
             var data = res.data
             var items = res.data.docs
-//            var item_count = data.page_item.item_count
-//            var paginate_disp = data.page_item.paginate_disp;
+            var item_count = data.page_item.item_count
+            var paginate_disp = data.page_item.paginate_disp;
 
             var arr =[];
             this.setState({ 
-//                data: items ,item_count:item_count ,paginate_disp: paginate_disp
-                data: items ,item_count:0 ,paginate_disp: 0,
+                data: items ,item_count:item_count ,paginate_disp: paginate_disp
             })
-console.log( items );
+// console.log(res.data.page_item );
         })
     }    
     tabRow(){
@@ -52,7 +52,7 @@ console.log( items );
     dispPagenate(){
 //console.log(this.state.paginate_disp)
         if(this.state.paginate_disp ===1){
-            var url = "/tasks?page="
+            var url = "/sorted_tasks?page="
             return(
             <div className="paginate_wrap">
                 <div className="btn-group" role="group" aria-label="Basic example">
@@ -66,7 +66,7 @@ console.log( items );
     render(){
         return (
             <div>
-                <h1>Tasks</h1>
+                <h1>SortedTasks- pagingIndex</h1>
                 <table className="table table-hover">
                     <thead>
                     <tr>
@@ -80,10 +80,25 @@ console.log( items );
                 </table> 
                 <hr />
                 {this.dispPagenate()}
-                <br /><br />           
+                <br />           
             </div>
         )
     }
+  
 }
+
 ReactDOM.render(<List />, document.getElementById('app'));
-</script>
+</script> 
+
+<!-- -->
+<style>
+.tasks_index_wrap .div_post_wrap{
+    padding : 8px;
+}
+.div_post_wrap hr{
+  height: 1px;
+  background-color: #000;
+  border: none;
+  margin-bottom : 0px;
+}
+</style>
